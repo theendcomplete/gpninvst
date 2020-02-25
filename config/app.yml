@@ -1,0 +1,19 @@
+development:
+  email_adapter: console
+  slack_webhook_url: https://discordapp.com/api/webhooks/601364204456247329/APcs_7vScBa9gxm3GUI3qWa8h1_l4FW6T2U6fFjSTwxfnskRLe1p-i1bvrGzX1B899Z-/slack
+  discord_webhook_url: https://discordapp.com/api/webhooks/601364204456247329/APcs_7vScBa9gxm3GUI3qWa8h1_l4FW6T2U6fFjSTwxfnskRLe1p-i1bvrGzX1B899Z-
+
+alpha:
+  email_adapter: slack
+  slack_webhook_url: https://discordapp.com/api/webhooks/601364204456247329/APcs_7vScBa9gxm3GUI3qWa8h1_l4FW6T2U6fFjSTwxfnskRLe1p-i1bvrGzX1B899Z-/slack
+  discord_webhook_url: https://discordapp.com/api/webhooks/601364204456247329/APcs_7vScBa9gxm3GUI3qWa8h1_l4FW6T2U6fFjSTwxfnskRLe1p-i1bvrGzX1B899Z-
+
+beta:
+  email_adapter: slack
+  slack_webhook_url: https://discordapp.com/api/webhooks/613675309744783371/YStaTQ2phtBrRe2z_up067vbfaBYGimHWPuxoRV1VpCjPtzSYU8U9xIUTlb07xMbGdWT/slack
+  discord_webhook_url: https://discordapp.com/api/webhooks/613675309744783371/YStaTQ2phtBrRe2z_up067vbfaBYGimHWPuxoRV1VpCjPtzSYU8U9xIUTlb07xMbGdWT
+
+release:
+  email_adapter: slack
+  slack_webhook_url: https://discordapp.com/api/webhooks/613656775425523726/jr6kT-JOT_TRFtJEPtiwNTLoK6vBsezE32cOZdtC0q1hgqXsgkWLnfGF7mWIFTIFOZjj/slack
+  discord_webhook_url: https://discordapp.com/api/webhooks/613656775425523726/jr6kT-JOT_TRFtJEPtiwNTLoK6vBsezE32cOZdtC0q1hgqXsgkWLnfGF7mWIFTIFOZjj

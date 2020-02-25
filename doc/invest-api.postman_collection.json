@@ -1,0 +1,3092 @@
+{
+	"info": {
+		"_postman_id": "54bdac2b-7c6c-492c-8bb9-82b02063c10b",
+		"name": "invest-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "graphql",
+			"item": [
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "createAuth",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createAuth.token;",
+											"    pm.environment.set(\"API_TOKEN\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation($login: String!, $password: String!) {\n    createAuth(login: $login, password: $password) {\n        token\n        fcmTopicName\n        user {\n            firstName\n            lastName\n        }\n    }\n}\n",
+										"variables": "{\n\t\"login\": \"{{AUTH_LOGIN}}\",\n\t\"password\": \"{{AUTH_PASSWORD}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "profile",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\n    profile {\n        login\n        email\n        firstName\n        lastName\n        roleCode\n    }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30dadd69-e22c-41c5-a501-a674bd588940",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let rows = pm.response.json().data.users.rows;",
+											"    pm.environment.set(\"USER_ID\", rows[0].id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query($options: ListOptions!) {\n    users(options: $options) {\n        totalCount\n        rows {\n            id\n            login\n            email\n        }\n    }\n}",
+										"variables": "{\n\t\"options\": {\n\t\t\"limit\": 2,\n\t\t\"page\": 1,\n\t\t\"order\": {\"id\": \"asc\"},\n\t\t\"efilter\": {\"and\": [{\"ilike\": [\"users.login\", \"%td\"]}]}\n\t}\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let id = pm.response.json().data.createUser.id;",
+											"    pm.environment.set(\"USER_ID\", id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    createUser(login: \"test12\", password: \"testT3ST\", email: \"test12@qa.trinitydigital.ru\", firstName: \"TestFirstName\", lastName: \"TestLastName\", roleCode: \"client\") {\n        id\n        login\n        email\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let id = pm.response.json().data.updateUser.id;",
+											"    pm.environment.set(\"USER_ID\", id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    updateUser(id: 2, firstName: \"TestFirstNameUpd\", lastName: \"TestLastNameUpd\", roleCode: \"client\", archivedAt: null) {\n        id\n        login\n        email\n        firstName\n        lastName\n        statusCode\n        archivedAt\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "destroyUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    destroyUser(id: 2, confirmationEmail: \"vb@trinitydigital.ru\")\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "investors",
+					"item": [
+						{
+							"name": "investors",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30dadd69-e22c-41c5-a501-a674bd588940",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let rows = pm.response.json().data.investors.rows;",
+											"    pm.environment.set(\"INVESTOR_ID\", rows[0].id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query($options: ListOptions!) {\n    investors(options: $options) {\n        totalCount\n        rows {\n            id\n            firstName\n            lastName\n            email\n            phone\n            city\n            status\n            lastActiveAt\n        }\n    }\n}",
+										"variables": "{\n\t\"options\": {\n\t\t\"limit\": 5,\n\t\t\"page\": 1,\n\t\t\"order\": {\"id\": \"asc\"},\n\t\t\"efilter\": {\"and\": [{\"ilike\": [\"first_name\", \"%\"]}]}\n\t}\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createInvestor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createInvestor.id;",
+											"    pm.environment.set(\"INVESTOR_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    createInvestor(email: \"testin1@qa.trinitydigital.ru\", firstName: \"TestInvFirstName\", lastName: \"TestInvLastName\", institutionTitle: \"TestInvInstitution\") {\n        id\n        email\n        firstName\n        lastName\n        sideTitle\n        status\n        country\n        city\n        geoRegion\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateInvestor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.updateInvestor.id;",
+											"    pm.environment.set(\"INVESTOR_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    updateInvestor(id: \"{{INVESTOR_ID}}\", sideTitle: \"Test side title\") {\n        id\n        email\n        firstName\n        lastName\n        sideTitle\n        status\n        country\n        city\n        geoRegion\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "destroyInvestor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    destroyInvestor(id: \"{{INVESTOR_ID}}\")\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "notes",
+					"item": [
+						{
+							"name": "notes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30dadd69-e22c-41c5-a501-a674bd588940",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let rows = pm.response.json().data.notes.rows;",
+											"    pm.environment.set(\"NOTE_ID\", rows[0].id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query($options: ListOptions!) {\n    notes(options: $options) {\n        totalCount\n        rows {\n            id\n            title\n            textShort\n            investor {\n                id\n                firstName\n                lastName\n            }\n        }\n    }\n}",
+										"variables": "{\n\t\"options\": {\n\t\t\"limit\": 5,\n\t\t\"page\": 1,\n\t\t\"order\": {\"id\": \"asc\"},\n\t\t\"efilter\": {\"and\": [{\"eq\": [\"notes.investor_id\", 1]}]}\n\t}\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createNote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    createNote(investorId: \"{{INVESTOR_ID}}\", title: \"TestNoteTitle1\", text: \"TestNoteText\\n\\nTestNoteText\\nTestNoteText\\n\\n\") {\n        id\n        title\n        text\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateNote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.updateNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    updateNote(id: \"{{NOTE_ID}}\", title: \"TestUPDATENoteTitle1\", text: \"TestUPDATENoteText\\n\\nTestNoteText\\nTestNoteText\\n\\n\") {\n        id\n        title\n        text\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "destroyNote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    destroyNote(id: \"{{NOTE_ID}}\")\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "tags",
+					"item": [
+						{
+							"name": "tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30dadd69-e22c-41c5-a501-a674bd588940",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let rows = pm.response.json().data.notes.rows;",
+											"    pm.environment.set(\"NOTE_ID\", rows[0].id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query($options: ListOptions!) {\n    tags(options: $options) {\n        totalCount\n        rows {\n            id\n            name\n            events {\n                totalCount\n                rows{\n                    name\n                }\n            }\n            \n        }\n    }\n}",
+										"variables": "{\n\t\"options\": {\n\t\t\"limit\": 5,\n\t\t\"page\": 1,\n\t\t\"order\": {\"id\": \"asc\"}\n\t}\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createTag",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    createTag(name: \"НовыйТег\") {\n        id\n        name\n            }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateTag",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.updateNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    updateTag(id: \"1\", name: \"TestUPDATETAG+Title1\") {\n        id\n        name\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "destroyTag",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\n    destroyTag(id: 28)}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "events",
+					"item": [
+						{
+							"name": "events",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30dadd69-e22c-41c5-a501-a674bd588940",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let rows = pm.response.json().data.investors.rows;",
+											"    pm.environment.set(\"INVESTOR_ID\", rows[0].id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "# Write your query or mutation here\r\nquery($options: ListOptions!) {\r\n  events(options: $options) {\r\n    totalCount\r\n    rows {\r\n      participantsConfirmedCount\r\n      id\r\n      name\r\n      tags {\r\n          totalCount\r\n          rows{\r\n              name\r\n              id\r\n          }\r\n      }\r\n      createdAt\r\n      updatedAt\r\n      eventOrganizers {\r\n          totalCount\r\n          rows {\r\n              id\r\n              user {\r\n                  id\r\n                  email\r\n                  firstName\r\n                  lastName\r\n                  login\r\n                    }\r\n              creator\r\n                }\r\n            }\r\n      eventParticipants {\r\n          totalCount\r\n          rows {\r\n              id\r\n              investor {\r\n                  id\r\n          firstName\r\n          lastName\r\n          email\r\n          phone\r\n          city\r\n          status\r\n          lastActiveAt\r\n                    }\r\n              confirmed\r\n                }\r\n            }\r\n      eventType\r\n      defaultLanguage\r\n      statusCode\r\n      description\r\n      startAt\r\n      finishAt\r\n      timezones\r\n      fileLinks\r\n      eventLink\r\n      confirmable\r\n      address {\r\n           addressString: \"Hello World\" \r\n      }\r\n      participants {\r\n        totalCount\r\n        rows {\r\n          id\r\n          firstName\r\n          lastName\r\n          email\r\n          phone\r\n          city\r\n          status\r\n          lastActiveAt\r\n                }\r\n            }\r\n      organizers {\r\n        totalCount\r\n        rows {\r\n          id\r\n          login\r\n          email\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n\t\"options\": {\r\n\t\t\"limit\": 10,\r\n\t\t\"page\": 1,\r\n\t\t\"order\": { \"id\": \"asc\" }\r\n\t}\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createEvent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation($attachments: [File!]) {\r\n  createEvent(\r\n    name: \"Тестовое письмо с Альфы 15:40\"\r\n    eventType: \"call\"\r\n    defaultLanguage: \"ru\"\r\n    description: \"Some info about event\"\r\n    startAt: \"2020-02-28T13:25:10Z\"\r\n    confirmable: false\r\n    statusCode: \"upcoming\"\r\n    finishAt: \"2020-05-30T13:25:10Z\"\r\n    eventLink: \"http://dickinson.biz/bryant_schamberger\"\r\n    attachments: $attachments\r\n    tags: [\"Test\", \"tESt243 \"]\r\n    timezones: [\r\n      \"Europe/Minsk\"\r\n      \"America/North_Dakota/New_Salem\"\r\n      \"America/North_Dakota/Center\"\r\n    ]\r\n    organizerIds: [1]\r\n    participantIds: [101]\r\naddress: { addressString: \"Hello World\"}    \r\n  ) {\r\n    id\r\n    fileLinks\r\n    name\r\n    tags {\r\n      totalCount\r\n      rows {\r\n        name\r\n      }\r\n    }\r\n    eventOrganizers {\r\n      totalCount\r\n      rows {\r\n        id\r\n        user {\r\n          id\r\n          email\r\n          firstName\r\n          lastName\r\n          login\r\n        }\r\n        creator\r\n      }\r\n    }\r\n    eventParticipants {\r\n      totalCount\r\n      rows {\r\n        id\r\n        investor {\r\n          id\r\n          firstName\r\n          lastName\r\n          email\r\n          phone\r\n          city\r\n          status\r\n          lastActiveAt\r\n        }\r\n        confirmed\r\n      }\r\n    }\r\n    eventType\r\n    defaultLanguage\r\n    participantsConfirmedCount\r\n    statusCode\r\n    description\r\n    startAt\r\n    finishAt\r\n    timezones\r\n    eventLink\r\n    confirmable\r\n    address {\r\n        addressString\r\n    }\r\n    participants {\r\n      totalCount\r\n      rows {\r\n        id\r\n        firstName\r\n        lastName\r\n        email\r\n        phone\r\n        city\r\n        status\r\n        lastActiveAt\r\n      }\r\n    }\r\n    organizers {\r\n      totalCount\r\n      rows {\r\n        id\r\n        login\r\n        email\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"variables": "{\r\n\t \"attachments.0\": \"USE ALTAIR GRAPHQL CLIENT\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateEvent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation($attachments: [File!]) {\r\n  updateEvent(\r\n    id: 12\r\n    name: \"updated Event\"\r\n    eventType: \"call\"\r\n    defaultLanguage: \"ru\"\r\n    description: \"Some info about event\"\r\n    startAt: \"2020-02-28T13:25:10Z\"\r\n    confirmable: false\r\n    statusCode: \"upcoming\"\r\n    finishAt: \"2020-05-30T13:25:10Z\"\r\n    eventLink: \"http://dickinson.biz/bryant_schamberger\"\r\n    timezones: [\r\n      \"Europe/Minsk\"\r\n      \"America/North_Dakota/New_Salem\"\r\n      \"America/North_Dakota/Center\"\r\n    ]\r\n    attachments: $attachments    \r\n    tags: [\"Test\", \"tESt243 \"]\r\n    organizerIds: [3]\r\n    participantIds: [1]\r\n  ) {\r\n    id\r\n    name\r\n    tags{\r\n      rows{\r\n        name\r\n      }\r\n    }\r\n    eventOrganizers {\r\n      totalCount\r\n      \r\n      rows {\r\n        id\r\n        user {\r\n          id\r\n          email\r\n          firstName\r\n          lastName\r\n          login\r\n        }\r\n        creator\r\n      }\r\n    }\r\n    eventParticipants {\r\n      totalCount\r\n      rows {\r\n        id\r\n        investor {\r\n          id\r\n          firstName\r\n          lastName\r\n          email\r\n          phone\r\n          city\r\n          status\r\n          lastActiveAt\r\n        }\r\n        confirmed\r\n      }\r\n    }\r\n    eventType\r\n    defaultLanguage\r\n    statusCode\r\n    description\r\n    startAt\r\n    finishAt\r\n    timezones\r\n    eventLink\r\n    confirmable\r\n    address\r\n    participants {\r\n      totalCount\r\n      rows {\r\n        id\r\n        firstName\r\n        lastName\r\n        email\r\n        phone\r\n        city\r\n        status\r\n        lastActiveAt\r\n      }\r\n    }\r\n    organizers {\r\n      totalCount\r\n      rows {\r\n        id\r\n        login\r\n        email\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+										"variables": "{\r\n\t \"attachments.0\": \"USE ALTAIR GRAPHQL CLIENT\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "destroyEvent",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2f0e53d1-1df2-466c-ae24-be16d304f519",
+										"exec": [
+											"pm.test(\"Save\", function() {",
+											"    let token = pm.response.json().data.createNote.id;",
+											"    pm.environment.set(\"NOTE_ID\", token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n    destroyEvent(id:1038)\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{API_GQL_URL}}",
+									"host": [
+										"{{API_GQL_URL}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "actions",
+					"item": [
+						{
+							"name": "actions",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "login",
+											"value": "ektd",
+											"type": "text"
+										},
+										{
+											"key": "type_code",
+											"value": "new_password",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/actions",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"actions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "action",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{API_URL}}/users/actions/4c643388f1fbe2e0d28777336276a2e2ca281ad575ee7045a333bafb19368768",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"actions",
+										"4c643388f1fbe2e0d28777336276a2e2ca281ad575ee7045a333bafb19368768"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "action",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "password",
+											"value": "ektdektd",
+											"type": "text"
+										},
+										{
+											"key": "password_confirmation",
+											"value": "ektdektd",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/actions/84dfffc6b195532c90acc452e1518817aa6cf0d770edb9bbfcfa0519d8729322",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"actions",
+										"84dfffc6b195532c90acc452e1518817aa6cf0d770edb9bbfcfa0519d8729322"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "auths",
+					"item": [
+						{
+							"name": "auth",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{API_KEY}}",
+										"type": "text"
+									},
+									{
+										"key": "token",
+										"value": "{{API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{API_URL}}/users/auth",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "018bfad0-7bd9-4dc4-bb64-3a89c71ccc34",
+										"exec": [
+											"pm.test(\"Set auth token\", function() {",
+											"    let data = pm.response.json();",
+											"    pm.expect(data).to.have.property('token');",
+											"    if (data.token) {",
+											"        pm.environment.set(\"API_TOKEN\", data.token);",
+											"    }",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "login",
+											"value": "{{AUTH_LOGIN}}",
+											"description": "login or email",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{AUTH_PASSWORD}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/auth",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"auth"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "auth",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"type": "text",
+												"value": "{{API_KEY}}"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "login",
+													"value": "amtd",
+													"description": "login(\"amtd\") or email (\"am@trinitydigital.ru\")",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "5up3RCRyp10pa55W0",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{API_URL}}/users/auth",
+											"host": [
+												"{{API_URL}}"
+											],
+											"path": [
+												"users",
+												"auth"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.12.1 (Ubuntu)"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 06 Dec 2018 10:10:13 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"42d9a7a0ba4176b3df285015e3f9a0c9\""
+										},
+										{
+											"key": "Cache-Control",
+											"value": "max-age=0, private, must-revalidate"
+										},
+										{
+											"key": "X-Request-Id",
+											"value": "c42a5250-47a1-47d6-8eff-145f34c1506b"
+										},
+										{
+											"key": "X-Runtime",
+											"value": "0.944581"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"token\": \"15a93f3eee9fe522ef68188549dac8dd0aaaa71bfb8017c0a20c680b2d2e3eefaf09bee8999a2a736374eb9a1516702ea0e49458d18b6790b01ebc471689864f\"\n}"
+								}
+							]
+						},
+						{
+							"name": "auth",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"value": "{{API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/auth",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"value": "{{API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/auth",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"auth"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "profiles",
+					"item": [
+						{
+							"name": "user profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{API_URL}}/users/profile",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user profile",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "Test1",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Test2",
+											"type": "text"
+										},
+										{
+											"key": "photo",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/profile",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "notes",
+							"item": [
+								{
+									"name": "notes",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+												"exec": [
+													"pm.test(\"Save id\", function() {",
+													"    let data = pm.response.json();",
+													"    if (data.rows && data.rows.length > 0) {",
+													"        const row = data.rows[0];",
+													"        pm.environment.set(\"USER_NOTE_ID\", row.id);",
+													"    }",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "apikey",
+												"type": "text",
+												"value": "{{API_KEY}}"
+											},
+											{
+												"key": "token",
+												"type": "text",
+												"value": "{{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{API_URL}}/users/{{USER_ID}}/notes?",
+											"host": [
+												"{{API_URL}}"
+											],
+											"path": [
+												"users",
+												"{{USER_ID}}",
+												"notes"
+											],
+											"query": [
+												{
+													"key": "fields",
+													"value": "[\"id\"]",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "[[\"id\",\"desc\"]]",
+													"disabled": true
+												},
+												{
+													"key": "efilter",
+													"value": "{\"and\": []}",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "user",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"first_name\": \"test\",\n\t\"districts\": [\n\t\t{\n\t\t\t\"title\": \"test\"\n\t\t}\n\t]\n}"
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/{{USER_ID}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"{{USER_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user password",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{API_URL}}/users/{{USER_ID}}/password",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"users",
+										"{{USER_ID}}",
+										"password"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save id\", function() {",
+									"    let data = pm.response.json();",
+									"    if (data.rows && data.rows.length > 0) {",
+									"        const row = data.rows[0];",
+									"        pm.environment.set(\"USER_ID\", row.id);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/users?",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "[\"districts\"]",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "[[\"id\",\"desc\"]]",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users import",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/users/import",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"users",
+								"import"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "investors",
+			"item": [
+				{
+					"name": "investor",
+					"item": [
+						{
+							"name": "notes",
+							"item": [
+								{
+									"name": "note",
+									"item": [
+										{
+											"name": "note",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+														"exec": [
+															"pm.test(\"Save id\", function() {",
+															"    const data = pm.response.json();",
+															"    pm.expect(data).to.have.property('id');",
+															"    pm.environment.set(\"NOTE_ID\", data.id);",
+															"});",
+															""
+														],
+														"type": "text/javascript"
+													}
+												}
+											],
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "apikey",
+														"type": "text",
+														"value": "{{API_KEY}}"
+													},
+													{
+														"key": "token",
+														"type": "text",
+														"value": "{{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "title",
+															"value": "Test note title",
+															"type": "text"
+														},
+														{
+															"key": "text",
+															"value": "Test note long long long long long long long long long long long long long long long long text.",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{API_URL}}/investors/{{INVESTOR_ID}}/notes",
+													"host": [
+														"{{API_URL}}"
+													],
+													"path": [
+														"investors",
+														"{{INVESTOR_ID}}",
+														"notes"
+													]
+												}
+											},
+											"response": []
+										}
+									],
+									"protocolProfileBehavior": {},
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "notes",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+												"exec": [
+													"pm.test(\"Save id\", function() {",
+													"    let data = pm.response.json();",
+													"    if (data.rows && data.rows.length > 0) {",
+													"        const row = data.rows[0];",
+													"        pm.environment.set(\"NOTE_ID\", row.id);",
+													"    }",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "apikey",
+												"type": "text",
+												"value": "{{API_KEY}}"
+											},
+											{
+												"key": "token",
+												"type": "text",
+												"value": "{{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{API_URL}}/investors/{{INVESTOR_ID}}/notes?",
+											"host": [
+												"{{API_URL}}"
+											],
+											"path": [
+												"investors",
+												"{{INVESTOR_ID}}",
+												"notes"
+											],
+											"query": [
+												{
+													"key": "fields",
+													"value": "[\"id\"]",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "[[\"id\",\"desc\"]]",
+													"disabled": true
+												},
+												{
+													"key": "efilter",
+													"value": "{\"and\": []}",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "investor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											"pm.test(\"Save id\", function() {",
+											"    const data = pm.response.json();",
+											"    pm.expect(data).to.have.property('id');",
+											"    pm.environment.set(\"INVESTOR_ID\", data.id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "Martin",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Goldenberg",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "martin@goldenberg.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "79239994455",
+											"type": "text"
+										},
+										{
+											"key": "geo_region",
+											"value": "{{INVESTOR_GEO_REGION}}",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Test country",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "{{INVESTOR_CITY}}",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Test address",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"type": "text"
+										},
+										{
+											"key": "last_active_at",
+											"value": "2019-06-15T10:00:00+03:00",
+											"type": "text"
+										},
+										{
+											"key": "institution_title",
+											"value": "{{INVESTOR_INSTITUTION_TITLE}}",
+											"type": "text"
+										},
+										{
+											"key": "institution_type_title",
+											"value": "{{INVESTOR_INSTITUTION_TYPE_TITLE}}",
+											"type": "text"
+										},
+										{
+											"key": "side_title",
+											"value": "{{INVESTOR_SIDE_TITLE}}",
+											"type": "text"
+										},
+										{
+											"key": "asset_class_title",
+											"value": "{{INVESTOR_ASSET_CLASS_TITLE}}",
+											"type": "text"
+										},
+										{
+											"key": "job_function_title",
+											"value": "{{INVESTOR_JOB_FUNCTION_TITLE}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/investors",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"investors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "investor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											"pm.test(\"Save id\", function() {",
+											"    const data = pm.response.json();",
+											"    pm.expect(data).to.have.property('id');",
+											"    pm.environment.set(\"INVESTOR_ID\", data.id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "first_name",
+											"value": "Martin1",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Goldenberg2",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "martin@goldenberg.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "phone",
+											"value": "79239994455",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "geo_region",
+											"value": "Test region",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "country",
+											"value": "Test country",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "city",
+											"value": "Test city",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "address",
+											"value": "Test address",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "last_active_at",
+											"value": "2019-06-15T10:00:00+03:00",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "institution_title",
+											"value": "Super Bank Ltd",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "institution_type_title",
+											"value": "Research",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "side_title",
+											"value": "Sell Side",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "asset_class_title",
+											"value": "EQ",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "job_function_title",
+											"value": "Director of Research, Analyst",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/investors/{{INVESTOR_ID}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"investors",
+										"{{INVESTOR_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "investor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{API_URL}}/investors/{{INVESTOR_ID}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"investors",
+										"{{INVESTOR_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "investors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save id\", function() {",
+									"    let data = pm.response.json();",
+									"    if (data.rows && data.rows.length > 0) {",
+									"        const row = data.rows[0];",
+									"        pm.environment.set(\"INVESTOR_ID\", row.id);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors?order=[[\"phone\",\"asc\"]]&efilter={\"and\": [{\"ilike\":[\"first_name\",\"Matthew%\"]}]}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "[\"id\"]",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "[[\"phone\",\"asc\"]]"
+								},
+								{
+									"key": "efilter",
+									"value": "{\"and\": [{\"ilike\":[\"first_name\",\"Matthew%\"]}]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values institution title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_INSTITUTION_TITLE\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=institution_title",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "institution_title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values institution type title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_INSTITUTION_TYPE_TITLE\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=institution_type_title",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "institution_type_title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_COUNTRY\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=country",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "country"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values geo region",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_GEO_REGION\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=geo_region",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "geo_region"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values city",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_CITY\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=city",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "city"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values side title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_SIDE_TITLE\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=side_title",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "side_title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values asset class title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_ASSET_CLASS_TITLE\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=asset_class_title",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "asset_class_title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "values job function title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save title\", function() {",
+									"    let data = pm.response.json();",
+									"    let rows = data;",
+									"    if (rows && rows.length > 0) {",
+									"        const row = rows[0];",
+									"        pm.environment.set(\"INVESTOR_JOB_FUNCTION_TITLE\", row);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/investors/values?field=job_function_title",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"values"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "job_function_title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "investors import",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/am/Downloads/report1.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/investors/import",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"investors",
+								"import"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "notes",
+			"item": [
+				{
+					"name": "note",
+					"item": [
+						{
+							"name": "note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											"pm.test(\"Save id\", function() {",
+											"    const data = pm.response.json();",
+											"    pm.expect(data).to.have.property('id');",
+											"    pm.environment.set(\"NOTE_ID\", data.id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Test note title",
+											"type": "text"
+										},
+										{
+											"key": "text",
+											"value": "Test note long long long long long long long long long long long long long long long long text.",
+											"type": "text"
+										},
+										{
+											"key": "investor_id",
+											"value": "{{INVESTOR_ID}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/notes",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"notes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											"pm.test(\"Save id\", function() {",
+											"    const data = pm.response.json();",
+											"    pm.expect(data).to.have.property('id');",
+											"    pm.environment.set(\"NOTE_ID\", data.id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{API_URL}}/notes/{{NOTE_ID}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"notes",
+										"{{NOTE_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											"pm.test(\"Save id\", function() {",
+											"    const data = pm.response.json();",
+											"    pm.expect(data).to.have.property('id');",
+											"    pm.environment.set(\"NOTE_ID\", data.id);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Test note title upd",
+											"type": "text"
+										},
+										{
+											"key": "text",
+											"value": "Test updated note long long long long long long long long long long long long long long long long text.",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_URL}}/notes/{{NOTE_ID}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"notes",
+										"{{NOTE_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0a36d2f6-26ee-4871-80dc-fb8eb941580c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "apikey",
+										"type": "text",
+										"value": "{{API_KEY}}"
+									},
+									{
+										"key": "token",
+										"type": "text",
+										"value": "{{API_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{API_URL}}/notes/{{NOTE_ID}}",
+									"host": [
+										"{{API_URL}}"
+									],
+									"path": [
+										"notes",
+										"{{NOTE_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "notes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0730d75e-dd4d-405a-8f54-bf1f2376a343",
+								"exec": [
+									"pm.test(\"Save id\", function() {",
+									"    let data = pm.response.json();",
+									"    if (data.rows && data.rows.length > 0) {",
+									"        const row = data.rows[0];",
+									"        pm.environment.set(\"NOTE_ID\", row.id);",
+									"    }",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"type": "text",
+								"value": "{{API_KEY}}"
+							},
+							{
+								"key": "token",
+								"type": "text",
+								"value": "{{API_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/notes?",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"notes"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "[\"id\"]",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "[[\"id\",\"desc\"]]",
+									"disabled": true
+								},
+								{
+									"key": "efilter",
+									"value": "{\"and\": []}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
